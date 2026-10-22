@@ -1,0 +1,44 @@
+{
+  "manifest_version": 1,
+  "id": "google",
+  "name": "Google",
+  "version": "0.1.0",
+  "description": "Google Drive, Docs, Sheets, Slides, Tasks and Contacts for the assistant, on your own Google account, asking before every change.",
+  "author": "Jaron Wilson",
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/Jaron-Wilson/odysseus-google",
+  "min_core": "0.1",
+  "tags": ["productivity"],
+  "runtime": {
+    "type": "process",
+    "command": ["python", "-m", "odysseus_google"],
+    "health": "/health",
+    "start": "lazy",
+    "idle_stop_minutes": 60
+  },
+  "permissions": [],
+  "ui": {
+    "tabs": [{ "id": "google", "title": "Google", "icon": "notes", "path": "/", "section": "organize", "after": "notes" }],
+    "settings_path": "/settings"
+  },
+  "tools": {
+    "endpoint": "/mod/tools",
+    "keywords": ["google workspace"]
+  },
+  "tutorial": {
+    "version": 1,
+    "steps": [
+      { "title": "Google files and tasks for the assistant",
+        "body": "This add-on lets the assistant search, read and write your **Google Drive**, **Docs**, **Sheets** and **Slides**, and use **Google Tasks** and **Contacts**. Google Calendar and Meet stay in Odysseus (Settings > Google)." },
+      { "title": "Set up the OAuth client",
+        "body": "Use the Google Cloud OAuth client Odysseus already has. Add this add-on's **redirect URI** (shown on its page, ending in `/mods/google/oauth/callback`) under Authorized redirect URIs, and enable the Drive, Docs, Sheets, Slides, Tasks and People APIs.\n\nAlready used these in Odysseus? An admin carries the client and your connection over with one command from the README (`odysseus_google.import_from_core`), so you do not connect again.",
+        "action": { "label": "Open the Google page", "settings": true } },
+      { "title": "Connect what you want",
+        "body": "Press **Connect** on each product card. Google opens in a new tab: keep every box ticked, then come back. **Read all my Drive files** widens Drive from the files the assistant made to your whole Drive (read only)." },
+      { "title": "It asks before every change",
+        "body": "Creating or editing a Doc, writing a Sheet, uploading to Drive or adding a task waits in the chat for your **Approve**. Reading never asks. The switch is under **Ask before writing**." },
+      { "title": "Ask the assistant",
+        "body": "In a chat, try *find my google doc about the trip*, *add a row to my budget spreadsheet* or *make a google slides deck from these notes*. Results end with a link to the file." }
+    ]
+  }
+}
