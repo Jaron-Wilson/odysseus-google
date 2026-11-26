@@ -133,6 +133,38 @@ person who set up the OAuth client can turn it off.
 - Scopes are the narrowest that do the job: Drive starts at `drive.file`, Contacts is read only,
   nothing asks for Gmail.
 
+## Run without Odysseus
+
+The Google page works on its own: you can set up the OAuth client and connect your account. With no `ODYSSEUS_URL` in its environment the mod runs standalone: it asks for a password
+instead of trusting Odysseus's signed headers, keeps its settings and data in files under `MOD_DATA_DIR`,
+and writes notifications to its log.
+
+```bash
+git clone https://github.com/Jaron-Wilson/odysseus-google.git && cd odysseus-google
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+MOD_PASSWORD=pick-one .venv/bin/python -m odysseus_google      # then open http://127.0.0.1:8765/
+```
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `MOD_PASSWORD` | made up and printed at start | The sign-in password (one local user) |
+| `MOD_PORT` | `8765` | The port it listens on |
+| `MOD_HOST` | `127.0.0.1` | The address it listens on. It speaks plain HTTP: to reach it from another machine, put HTTPS in front (for example `tailscale serve`) rather than listening on `0.0.0.0` |
+| `MOD_DATA_DIR` | `./data` | Where its settings and data are kept |
+
+What works standalone:
+
+- The Google page: the OAuth client, connecting and disconnecting products, the connection check. Register `http://127.0.0.1:8765/oauth/callback` (or the address you use) as the redirect URI in Google Cloud
+- The `google_*` tools answer at `POST /mod/tools/<name>` for a signed-in session, for your own scripts
+
+What needs Odysseus:
+
+- Using the tools from a chat: the agent, `asks_first` approvals for writes and the chat that shows them are Odysseus's
+- Carrying over a connection from Odysseus's settings (the import reads an Odysseus data folder)
+
+`tests/test_standalone.py` starts it this way, as its own process, and checks the sign-in, that
+forged Odysseus headers are ignored, and the pages.
+
 ## Development
 
 ```
